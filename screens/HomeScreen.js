@@ -298,61 +298,36 @@ const HomeScreen = () => {
             <Feather name="mic" size={24} color="black" />
           </View>
 
-          <Pressable
-            onPress={() => setModalVisible(!modalVisible)}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              padding: 10,
-              backgroundColor: "#AFEEEE",
-            }}
-          >
-            <Ionicons name="location-outline" size={24} color="black" />
+       
 
-            <Pressable>
-            {selectedAddress ? (
-                <Text>
-                  Deliver to {selectedAddress?.name} - {selectedAddress?.street}
-                </Text>
-              ) : (
-                <Text style={{ fontSize: 13, fontWeight: "500" }}>
-                    Add a Address
-                </Text>
-              )}
-            </Pressable>
+          {/* <ScrollView showsVerticalScrollIndicator={false}>
+  {list.map((item, index) => (
+    <Pressable
+      key={index}
+      style={{
+        marginVertical: 10,  // Vertical margin between items
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Image
+        style={{ width: 50, height: 50, resizeMode: "contain" }}
+        source={{ uri: item.image }}
+      />
+      <Text
+        style={{
+          textAlign: "center",
+          fontSize: 12,
+          fontWeight: "500",
+          marginTop: 5,
+        }}
+      >
+        {item?.name}
+      </Text>
+    </Pressable>
+  ))}
+</ScrollView> */}
 
-            <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
-          </Pressable>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {list.map((item, index) => (
-              <Pressable
-                key={index}
-                style={{
-                  margin: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  style={{ width: 50, height: 50, resizeMode: "contain" }}
-                  source={{ uri: item.image }}
-                />
-
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 12,
-                    fontWeight: "500",
-                    marginTop: 5,
-                  }}
-                >
-                  {item?.name}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
 
           <SliderBox
             images={images}

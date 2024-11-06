@@ -12,6 +12,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { UserType } from "../UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import sou9ekImage from '../assets/images/sou9ekbg.png'; // Adjust the path if necessary
 
 const ProfileScreen = () => {
   const { userId, setUserId } = useContext(UserType);
@@ -22,15 +23,13 @@ const ProfileScreen = () => {
     navigation.setOptions({
       headerTitle: "",
       headerStyle: {
-        backgroundColor: "#00CED1",
+        backgroundColor: "#a1a09c",
       },
       headerLeft: () => (
         <Image
-          style={{ width: 140, height: 120, resizeMode: "contain" }}
-          source={{
-            uri: "https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c518.png",
-          }}
-        />
+        style={{ width: 230, height: 320, resizeMode: "contain" }}
+        source={sou9ekImage}
+      />
       ),
       headerRight: () => (
         <View
