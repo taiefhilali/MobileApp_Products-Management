@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState,useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -35,34 +36,38 @@ const LoginScreen = () => {
   }, []);
   const handleLogin = () => {
     const user = {
-      email: email,
+      identifier: email, // Use email as the identifier (can be CIN or email)
       password: password,
     };
-
+  
     axios
-      .post("http://localhost:8000/login", user)
+      .post("http://10.0.2.2:5000/api/users/login", user)
       .then((response) => {
-        console.log(response);
         const token = response.data.token;
+        
+        // Store the token in AsyncStorage
         AsyncStorage.setItem("authToken", token);
+        
+        // Optionally, store additional user details if needed
+        const userDetails = response.data.user;
+        AsyncStorage.setItem("userDetails", JSON.stringify(userDetails));
+  
+        // Navigate to the Main screen
         navigation.replace("Main");
       })
       .catch((error) => {
-        Alert.alert("Login Error", "Invalid Email");
-        console.log(error);
+        Alert.alert("Login Error", "Invalid credentials. Please try again.");
+        console.log(error.response ? error.response.data : error.message);
       });
   };
+  
+  
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50 }}
     >
       <View>
-        <Image
-          style={{ width: 150, height: 100 }}
-          source={{
-            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
-          }}
-        />
+        <Image style={styles.logo} source={require("../assets/images/sou9ek.png")} />
       </View>
 
       <KeyboardAvoidingView>
@@ -73,10 +78,10 @@ const LoginScreen = () => {
               fontWeight: "bold",
               marginTop: 12,
               color: "#041E42",
+              marginLeft: 40,
             }}
           >
-            Login In to your Account
-          </Text>
+           Connectez-vous à votre compte          </Text>
         </View>
 
         <View style={{ marginTop: 70 }}>
@@ -201,4 +206,9 @@ const LoginScreen = () => {
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  logo: {
+    width: 400,
+    height:200,
+  },
+});
