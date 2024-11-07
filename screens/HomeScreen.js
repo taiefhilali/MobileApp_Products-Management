@@ -25,48 +25,14 @@ import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../UserContext";
 import jwt_decode from "jwt-decode";
+import DisplayFamille from "./DisplayFamillesScreen";
 
 const HomeScreen = () => {
-  const list = [
-    {
-      id: "0",
-      image: "https://m.media-amazon.com/images/I/41EcYoIZhIL._AC_SY400_.jpg",
-      name: "Home",
-    },
-    {
-      id: "1",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/blockbuster.jpg",
-      name: "Deals",
-    },
-    {
-      id: "3",
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/I/31dXEvtxidL._AC_SX368_.jpg",
-      name: "Electronics",
-    },
-    {
-      id: "4",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/All_Icons_Template_1_icons_01.jpg",
-      name: "Mobiles",
-    },
-    {
-      id: "5",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/music.jpg",
-      name: "Music",
-    },
-    {
-      id: "6",
-      image: "https://m.media-amazon.com/images/I/51dZ19miAbL._AC_SY350_.jpg",
-      name: "Fashion",
-    },
-  ];
+
   const images = [
-    "https://img.etimg.com/thumb/msid-93051525,width-1070,height-580,imgsize-2243475,overlay-economictimes/photo.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/devjyoti/PD23/Launches/Updated_ingress1242x550_3.gif",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Books/BB/JULY/1242x550_Header-BB-Jul23.jpg",
+    "https://img.freepik.com/premium-photo/top-view-online-shopping-concept-with-credit-card-smart-phone-computer-isolated-office-yellow-table-background_315337-5991.jpg",
+    "https://img.freepik.com/premium-photo/d-rendering-shopping-cart-yellow-background-copy-space-shopping-shopping-bags_701162-3207.jpg",
+    "https://img.freepik.com/premium-photo/shopping-cart-with-mouse-cursor_256339-331.jpg",
   ];
   const deals = [
     {
@@ -268,7 +234,8 @@ const HomeScreen = () => {
         <ScrollView>
           <View
             style={{
-              backgroundColor: "#00CED1",
+              marginTop:35,
+              backgroundColor: "#f3c94a",
               padding: 10,
               flexDirection: "row",
               alignItems: "center",
@@ -284,6 +251,7 @@ const HomeScreen = () => {
                 borderRadius: 3,
                 height: 38,
                 flex: 1,
+                borderRadius: 30 
               }}
             >
               <AntDesign
@@ -292,7 +260,7 @@ const HomeScreen = () => {
                 size={22}
                 color="black"
               />
-              <TextInput placeholder="Search Amazon.in" />
+              <TextInput placeholder="Search " />
             </Pressable>
 
             <Feather name="mic" size={24} color="black" />
@@ -300,8 +268,8 @@ const HomeScreen = () => {
 
        
 
-          {/* <ScrollView showsVerticalScrollIndicator={false}>
-  {list.map((item, index) => (
+          <ScrollView showsVerticalScrollIndicator={false}>
+  {/* {list.map((item, index) => (
     <Pressable
       key={index}
       style={{
@@ -325,8 +293,9 @@ const HomeScreen = () => {
         {item?.name}
       </Text>
     </Pressable>
-  ))}
-</ScrollView> */}
+  ))} */}
+  <DisplayFamille/>
+</ScrollView>
 
 
           <SliderBox

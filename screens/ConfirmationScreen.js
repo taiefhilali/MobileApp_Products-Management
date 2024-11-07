@@ -163,7 +163,7 @@ const ConfirmationScreen = () => {
                 {step.title}
               </Text>
             </View>
-          ))}
+          ))} 
         </View>
       </View>
 
