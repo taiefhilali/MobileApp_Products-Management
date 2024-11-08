@@ -594,6 +594,7 @@ import {
   Pressable,
   TextInput,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
@@ -613,42 +614,7 @@ import { UserType } from "../UserContext";
 import jwt_decode from "jwt-decode";
 
 const HomeScreen = () => {
-  const list = [
-    {
-      id: "0",
-      image: "https://m.media-amazon.com/images/I/41EcYoIZhIL._AC_SY400_.jpg",
-      name: "Home",
-    },
-    {
-      id: "1",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/blockbuster.jpg",
-      name: "Deals",
-    },
-    {
-      id: "3",
-      image:
-        "https://images-eu.ssl-images-amazon.com/images/I/31dXEvtxidL._AC_SX368_.jpg",
-      name: "Electronics",
-    },
-    {
-      id: "4",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/All_Icons_Template_1_icons_01.jpg",
-      name: "Mobiles",
-    },
-    {
-      id: "5",
-      image:
-        "https://m.media-amazon.com/images/G/31/img20/Events/Jup21dealsgrid/music.jpg",
-      name: "Music",
-    },
-    {
-      id: "6",
-      image: "https://m.media-amazon.com/images/I/51dZ19miAbL._AC_SY350_.jpg",
-      name: "Fashion",
-    },
-  ];
+
   const images = [
     "https://img.etimg.com/thumb/msid-93051525,width-1070,height-580,imgsize-2243475,overlay-economictimes/photo.jpg",
     "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/devjyoti/PD23/Launches/Updated_ingress1242x550_3.gif",
@@ -798,9 +764,27 @@ const HomeScreen = () => {
   ]);
   const [familles, setFamilles] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [selectedFamille, setSelectedFamille] = useState(null);
   const [loadingProducts, setLoadingProducts] = useState(false);
 
+  // Fetch products for the selected famille
+  const fetchProductsForFamille = async (familleId) => {
+    setLoadingProducts(true);
+    try {
+      const response = await axios.get(`http://10.0.2.2:5000/api/articles`);
+      setProducts(response.data);  // Set the fetched products
+      setLoadingProducts(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setLoadingProducts(false);
+    }
+  };
+
+  const handleFamillePress = (famille) => {
+    setSelectedFamille(famille);
+    fetchProductsForFamille(famille.id);  // Assuming `id` is the identifier for the famille
+  };
   // Fetch familles on component mount
   useEffect(() => {
     const fetchFamilles = async () => {
@@ -817,18 +801,7 @@ const HomeScreen = () => {
 
     fetchFamilles();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://fakestoreapi.com/products");
-        setProducts(response.data);
-      } catch (error) {
-        console.log("error message", error);
-      }
-    };
 
-    fetchData();
-  }, []);
   const onGenderOpen = useCallback(() => {
     setCompanyOpen(false);
   }, []);
@@ -919,6 +892,8 @@ const HomeScreen = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
+        onPress={() => handleFamillePress(item)}
+
       >
         <View
           style={{
@@ -959,15 +934,15 @@ const HomeScreen = () => {
 </ScrollView>
 
 
-          <SliderBox
+          {/* <SliderBox
             images={images}
             autoPlay
             circleLoop
             dotColor={"#13274F"}
             inactiveDotColor="#90A4AE"
             ImageComponentStyle={{ width: "100%" }}
-          />
-
+          /> */}
+{/* 
           <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
             Trending Deals of the week
           </Text>
@@ -1018,9 +993,9 @@ const HomeScreen = () => {
 
           <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
             Today's Deals
-          </Text>
+          </Text> */}
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {offers.map((item, index) => (
               <Pressable
                 onPress={() =>
@@ -1070,7 +1045,7 @@ const HomeScreen = () => {
                 </View>
               </Pressable>
             ))}
-          </ScrollView>
+          </ScrollView> */}
 
           <Text
             style={{
@@ -1110,20 +1085,26 @@ const HomeScreen = () => {
             />
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {products
-              ?.filter((item) => item.category === category)
-              .map((item, index) => (
-                <ProductItem item={item} key={index} />
-              ))}
-          </View>
-        </ScrollView>
+          {selectedFamille && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            marginTop: 20,
+          }}
+        >
+          {loadingProducts ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            products.map((item, index) => (
+              <ProductItem item={item} key={index} />
+            ))
+          )}
+        </View>
+      )}
+    </ScrollView>
+
       </SafeAreaView>
 
       <BottomModal
