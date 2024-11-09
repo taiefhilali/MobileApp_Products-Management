@@ -39,10 +39,12 @@ const CartScreen = () => {
     <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
       <View
         style={{
-          backgroundColor: "#00CED1",
+          backgroundColor: "#f3c94a",
           padding: 10,
           flexDirection: "row",
           alignItems: "center",
+          borderRadius: 10
+
         }}
       >
         <Pressable
@@ -55,6 +57,8 @@ const CartScreen = () => {
             borderRadius: 3,
             height: 38,
             flex: 1,
+            borderRadius: 30
+
           }}
         >
           <AntDesign
@@ -123,26 +127,21 @@ const CartScreen = () => {
               <View>
                 <Image
                   style={{ width: 140, height: 140, resizeMode: "contain" }}
-                  source={{ uri: item?.image }}
+                  source={{ uri: item?.Image }}
                 />
               </View>
 
               <View>
                 <Text numberOfLines={3} style={{ width: 150, marginTop: 10 }}>
-                  {item?.title}
+                  {item?.libelle}
                 </Text>
                 <Text
                   style={{ fontSize: 20, fontWeight: "bold", marginTop: 6 }}
                 >
-                  {item?.price}
+                  {item?.prixDeVenteTTC}
                 </Text>
-                <Image
-                  style={{ width: 30, height: 30, resizeMode: "contain" }}
-                  source={{
-                    uri: "https://assets.stickpng.com/thumbs/5f4924cc68ecc70004ae7065.png",
-                  }}
-                />
-                <Text style={{ color: "green" }}>In Stock</Text>
+   
+                {/* <Text style={{ color: "green" }}>In Stock</Text> */}
                 {/* <Text style={{ fontWeight: "500", marginTop: 6 }}>
                   {item?.rating?.rate} ratings
                 </Text> */}
@@ -218,15 +217,18 @@ const CartScreen = () => {
               <Pressable
                 onPress={() => deleteItem(item)}
                 style={{
-                  backgroundColor: "white",
+                  
+                  // backgroundColor: "#F07C5D",
                   paddingHorizontal: 8,
                   paddingVertical: 10,
                   borderRadius: 5,
-                  borderColor: "#C0C0C0",
-                  borderWidth: 0.6,
+                  // borderColor: "#F07C5D",
+                  // borderWidth: 0.6,
+                  marginLeft:210,
+                  marginTop:-350,
                 }}
               >
-                <Text>Delete</Text>
+                <Text style={{color:"#F07C5D", fontSize:24}}>X</Text>
               </Pressable>
             </Pressable>
 
@@ -238,7 +240,7 @@ const CartScreen = () => {
                 marginBottom: 15,
               }}
             >
-              <Pressable
+              {/* <Pressable
                 style={{
                   backgroundColor: "white",
                   paddingHorizontal: 8,
@@ -249,9 +251,9 @@ const CartScreen = () => {
                 }}
               >
                 <Text>Save For Later</Text>
-              </Pressable>
+              </Pressable> */}
 
-              <Pressable
+              {/* <Pressable
                 style={{
                   backgroundColor: "white",
                   paddingHorizontal: 8,
@@ -262,7 +264,7 @@ const CartScreen = () => {
                 }}
               >
                 <Text>See More Like this</Text>
-              </Pressable>
+              </Pressable> */}
             </Pressable>
           </View>
         ))}

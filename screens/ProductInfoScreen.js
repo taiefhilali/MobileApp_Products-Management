@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, Text, View, Pressable, TextInput, ImageBackground, Dimensions, Image } from "react-native";
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/CartReducer";
