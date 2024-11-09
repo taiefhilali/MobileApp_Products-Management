@@ -270,7 +270,8 @@ console.log('====================================');
               padding: 10,
               flexDirection: "row",
               alignItems: "center",
-              borderRadius: 10
+              borderRadius: 10,
+              marginTop:30
             }}
           >
             <Pressable

@@ -1,24 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Pressable,
-  TextInput,
-  ImageBackground,
-  Dimensions,
-} from "react-native";
-import React ,{useState} from "react";
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { ScrollView, Text, View, Pressable, TextInput, ImageBackground, Dimensions, Image } from "react-native";
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/CartReducer";
 
 const ProductInfoScreen = () => {
   const route = useRoute();
   const { width } = Dimensions.get("window");
+  const { item } = route.params;
+  const { carouselImages } = route.params;
   const navigation = useNavigation();
   const [addedToCart, setAddedToCart] = useState(false);
   const height = (width * 100) / 100;
@@ -31,50 +22,50 @@ const ProductInfoScreen = () => {
     }, 60000);
   };
   const cart = useSelector((state) => state.cart.cart);
-  console.log(cart);
+
   return (
     <ScrollView
       style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}
       showsVerticalScrollIndicator={false}
     >
+      {/* Search Bar and Icons */}
       <View
-        style={{
-          backgroundColor: "#00CED1",
-          padding: 10,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 7,
-            gap: 10,
-            backgroundColor: "white",
-            borderRadius: 3,
-            height: 38,
-            flex: 1,
-          }}
-        >
-          <AntDesign
-            style={{ paddingLeft: 10 }}
-            name="search1"
-            size={22}
-            color="black"
-          />
-          <TextInput placeholder="Search " />
-        </Pressable>
+            style={{
+              backgroundColor: "#f3c94a",
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 10,
+              // marginTop:1
+            }}
+          >
+            <Pressable
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginHorizontal: 7,
+                gap: 10,
+                backgroundColor: "white",
+                borderRadius: 3,
+                height: 38,
+                flex: 1,
+                borderRadius: 30
 
+              }}
+            >
+          <AntDesign style={{ paddingLeft: 10 }} name="search1" size={22} color="black" />
+          <TextInput placeholder="Search" />
+        </Pressable>
         <Feather name="mic" size={24} color="black" />
       </View>
 
+      {/* Image Carousel */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {route.params.carouselImages.map((item, index) => (
+        {carouselImages?.map((image, index) => (
           <ImageBackground
-            style={{ width, height, marginTop: 25, resizeMode: "contain" }}
-            source={{ uri: item }}
             key={index}
+            style={{ width, height, marginTop: 25, resizeMode: "contain" }}
+            source={{ uri: image.Image }}  // Ensure `image.Image` exists and is valid
           >
             <View
               style={{
@@ -106,7 +97,6 @@ const ProductInfoScreen = () => {
                   20% off
                 </Text>
               </View>
-
               <View
                 style={{
                   width: 40,
@@ -118,11 +108,7 @@ const ProductInfoScreen = () => {
                   flexDirection: "row",
                 }}
               >
-                <MaterialCommunityIcons
-                  name="share-variant"
-                  size={24}
-                  color="black"
-                />
+                <MaterialCommunityIcons name="share-variant" size={24} color="black" />
               </View>
             </View>
 
@@ -146,100 +132,96 @@ const ProductInfoScreen = () => {
         ))}
       </ScrollView>
 
+      {/* Product Details */}
       <View style={{ padding: 10 }}>
+        {/* Product Image */}
+        {item?.Image && (
+          <Image
+            source={{ uri: item.Image }}
+            style={{ width: '100%', height: 200, resizeMode: 'contain', marginBottom: 10 }}
+          />
+        )}
+
         <Text style={{ fontSize: 15, fontWeight: "500" }}>
-          {route?.params?.title}
+          {item?.designation} {/* Product designation */}
         </Text>
 
-        <Text style={{ fontSize: 18, fontWeight: "600", marginTop: 6 }}>
-          ₹{route?.params?.price}
-        </Text>
-      </View>
-
-      <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
-
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-        <Text>Color: </Text>
-        <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-          {route?.params?.color}
-        </Text>
-      </View>
-
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-        <Text>Size: </Text>
-        <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-          {route?.params?.size}
-        </Text>
-      </View>
-
-      <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
-
-      <View style={{ padding: 10 }}>
-        <Text style={{ fontSize: 15, fontWeight: "bold", marginVertical: 5 }}>
-          Total : ₹{route.params.price}
-        </Text>
-        <Text style={{ color: "#00CED1" }}>
-          FREE delivery Tomorrow by 3 PM.Order within 10hrs 30 mins
+        <Text style={{ fontSize: 18, fontWeight: "600", marginTop: 6 ,marginLeft:320}}>
+          {item?.prixDeVenteTTC} dt {/* Price */}
         </Text>
 
-        <View
+        {/* Divider */}
+        <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
+
+
+
+  
+
+        {/* Divider */}
+        <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
+
+        {/* Additional Info */}
+        <View style={{ padding: 10 }}>
+          {/* <Text style={{ fontSize: 15, fontWeight: "bold", marginVertical: 5 }}>
+            Totale : {item?.prixDeVenteTTC} dt 
+          </Text>
+        */}
+
+          <View
+            style={{
+              flexDirection: "row",
+              marginVertical: 5,
+              alignItems: "center",
+              gap: 5,
+            }}
+          >
+        
+          </View>
+        </View>
+
+        {/* Stock Status */}
+        {/* <Text style={{ color: "green", marginHorizontal: 10, fontWeight: "500" }}>
+          IN Stock
+        </Text> */}
+
+        {/* Add to Cart Button */}
+        <Pressable
+          onPress={() => addItemToCart(item)}
           style={{
-            flexDirection: "row",
-            marginVertical: 5,
+            backgroundColor: "#FFC72C",
+            padding: 10,
+            borderRadius: 20,
+            justifyContent: "center",
             alignItems: "center",
-            gap: 5,
+            marginHorizontal: 10,
+            marginVertical: 10,
           }}
         >
-          <Ionicons name="location" size={24} color="black" />
+          {addedToCart ? (
+            <Text>Ajouté au Panier</Text>
+          ) : (
+            <Text>Ajouter au Panier</Text>
+          )}
+        </Pressable>
 
-          <Text style={{ fontSize: 15, fontWeight: "500" }}>
-            Deliver To Sujan - Bangalore 560019
-          </Text>
-        </View>
+        {/* Buy Now Button */}
+        <Pressable
+          style={{
+            backgroundColor: "#FFAC1C",
+            padding: 10,
+            borderRadius: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 10,
+            marginVertical: 10,
+          }}
+          onPress={() => navigation.navigate("Home")}
+        >
+          <Text>Retour aux articles</Text>
+        </Pressable>
       </View>
-
-      <Text style={{ color: "green", marginHorizontal: 10, fontWeight: "500" }}>
-        IN Stock
-      </Text>
-
-      <Pressable
-        onPress={() => addItemToCart(route?.params?.item)}
-        style={{
-          backgroundColor: "#FFC72C",
-          padding: 10,
-          borderRadius: 20,
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 10,
-          marginVertical: 10,
-        }}
-      >
-        {addedToCart ? (
-          <View>
-            <Text>Added to Cart</Text>
-          </View>
-        ) : (
-          <Text>Add to Cart</Text>
-        )}
-      </Pressable>
-
-      <Pressable
-        style={{
-          backgroundColor: "#FFAC1C",
-          padding: 10,
-          borderRadius: 20,
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 10,
-          marginVertical: 10,
-        }}
-      >
-        <Text>Buy Now</Text>
-      </Pressable>
     </ScrollView>
   );
 };
 
 export default ProductInfoScreen;
-
-const styles = StyleSheet.create({});
