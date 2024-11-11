@@ -35,237 +35,63 @@ const CartScreen = () => {
     dispatch(removeFromCart(item));
   };
   const navigation = useNavigation();
-  return (
+ return (
     <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
-      <View
-        style={{
-          backgroundColor: "#f3c94a",
-          padding: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          borderRadius: 10
-
-        }}
-      >
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 7,
-            gap: 10,
-            backgroundColor: "white",
-            borderRadius: 3,
-            height: 38,
-            flex: 1,
-            borderRadius: 30
-
-          }}
-        >
-          <AntDesign
-            style={{ paddingLeft: 10 }}
-            name="search1"
-            size={22}
-            color="black"
-          />
+      <View style={styles.searchContainer}>
+        <Pressable style={styles.searchInput}>
+          <AntDesign style={styles.searchIcon} name="search1" size={22} color="black" />
           <TextInput placeholder="Search" />
         </Pressable>
-
         <Feather name="mic" size={24} color="black" />
       </View>
 
-      <View style={{ padding: 10, flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ fontSize: 18, fontWeight: "400" }}>Subtotal : </Text>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{total}</Text>
+      <View style={styles.subtotalContainer}>
+        <Text style={styles.subtotalText}>Subtotal :</Text>
+        <Text style={styles.totalText}>{total}</Text>
       </View>
-      <Text style={{ marginHorizontal: 10 }}>EMI details Available</Text>
+      <Text style={styles.emiText}>EMI details Available</Text>
 
-      <Pressable
-        onPress={() => navigation.navigate("Confirm")}
-        style={{
-          backgroundColor: "#FFC72C",
-          padding: 10,
-          borderRadius: 5,
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 10,
-          marginTop: 10,
-        }}
-      >
+      <Pressable onPress={() => navigation.navigate("Confirm")} style={styles.proceedButton}>
         <Text>Proceed to Buy ({cart.length}) items</Text>
       </Pressable>
 
-      <Text
-        style={{
-          height: 1,
-          borderColor: "#D0D0D0",
-          borderWidth: 1,
-          marginTop: 16,
-        }}
-      />
+      <Text style={styles.separator} />
 
-      <View style={{ marginHorizontal: 10 }}>
+      <View style={styles.cartItemsContainer}>
         {cart?.map((item, index) => (
-          <View
-            style={{
-              backgroundColor: "white",
-              marginVertical: 10,
-              borderBottomColor: "#F0F0F0",
-              borderWidth: 2,
-              borderLeftWidth: 0,
-              borderTopWidth: 0,
-              borderRightWidth: 0,
-            }}
-            key={index}
-          >
-            <Pressable
-              style={{
-                marginVertical: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+          <View style={styles.cartItem} key={index}>
+            <Pressable style={styles.itemContainer}>
               <View>
-                <Image
-                  style={{ width: 140, height: 140, resizeMode: "contain" }}
-                  source={{ uri: item?.Image }}
-                />
+                <Image style={styles.itemImage} source={{ uri: item?.Image }} />
               </View>
 
-              <View>
-                <Text numberOfLines={3} style={{ width: 150, marginTop: 10 }}>
-                  {item?.libelle}
+              <View style={styles.itemDetails}>
+                <View style={styles.badgeContainer}>
+                  <Text style={styles.badge}>{item.marque?.libelle}</Text>
+                  <Text style={styles.badge}>{item.famille?.libelle}</Text>
+                </View>
+
+                <Text numberOfLines={3} style={styles.itemDesignation}>
+                  {item?.designation}
                 </Text>
-                <Text
-                  style={{ fontSize: 20, fontWeight: "bold", marginTop: 6 }}
-                >
-                  {item?.prixDeVenteTTC}
-                </Text>
-   
-                {/* <Text style={{ color: "green" }}>In Stock</Text> */}
-                {/* <Text style={{ fontWeight: "500", marginTop: 6 }}>
-                  {item?.rating?.rate} ratings
-                </Text> */}
+                <Text style={styles.itemPrice}>{item?.prixDeVenteTTC} dt</Text>
               </View>
             </Pressable>
 
-            <Pressable
-              style={{
-                marginTop: 15,
-                marginBottom: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
-                  borderRadius: 7,
-                }}
-              >
-                {item?.quantity > 1 ? (
-                  <Pressable
-                    onPress={() => decreaseQuantity(item)}
-                    style={{
-                      backgroundColor: "#D8D8D8",
-                      padding: 7,
-                      borderTopLeftRadius: 6,
-                      borderBottomLeftRadius: 6,
-                    }}
-                  >
-                    <AntDesign name="minus" size={24} color="black" />
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() => deleteItem(item)}
-                    style={{
-                      backgroundColor: "#D8D8D8",
-                      padding: 7,
-                      borderTopLeftRadius: 6,
-                      borderBottomLeftRadius: 6,
-                    }}
-                  >
-                    <AntDesign name="delete" size={24} color="black" />
-                  </Pressable>
-                )}
-
-                <Pressable
-                  style={{
-                    backgroundColor: "white",
-                    paddingHorizontal: 18,
-                    paddingVertical: 6,
-                  }}
-                >
-                  <Text>{item?.quantity}</Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={() => increaseQuantity(item)}
-                  style={{
-                    backgroundColor: "#D8D8D8",
-                    padding: 7,
-                    borderTopLeftRadius: 6,
-                    borderBottomLeftRadius: 6,
-                  }}
-                >
-                  <Feather name="plus" size={24} color="black" />
-                </Pressable>
-              </View>
-              <Pressable
-                onPress={() => deleteItem(item)}
-                style={{
-                  
-                  // backgroundColor: "#F07C5D",
-                  paddingHorizontal: 8,
-                  paddingVertical: 10,
-                  borderRadius: 5,
-                  // borderColor: "#F07C5D",
-                  // borderWidth: 0.6,
-                  marginLeft:210,
-                  marginTop:-350,
-                }}
-              >
-                <Text style={{color:"#F07C5D", fontSize:24}}>X</Text>
+            <View style={styles.quantityContainer}>
+              <Pressable onPress={() => decreaseQuantity(item)} style={styles.quantityButton}>
+                <AntDesign name="minus" size={24} color="black" />
               </Pressable>
-            </Pressable>
-
-            <Pressable
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 15,
-              }}
-            >
-              {/* <Pressable
-                style={{
-                  backgroundColor: "white",
-                  paddingHorizontal: 8,
-                  paddingVertical: 10,
-                  borderRadius: 5,
-                  borderColor: "#C0C0C0",
-                  borderWidth: 0.6,
-                }}
-              >
-                <Text>Save For Later</Text>
-              </Pressable> */}
-
-              {/* <Pressable
-                style={{
-                  backgroundColor: "white",
-                  paddingHorizontal: 8,
-                  paddingVertical: 10,
-                  borderRadius: 5,
-                  borderColor: "#C0C0C0",
-                  borderWidth: 0.6,
-                }}
-              >
-                <Text>See More Like this</Text>
-              </Pressable> */}
-            </Pressable>
+              <Pressable style={styles.quantityDisplay}>
+                <Text>{item?.quantity}</Text>
+              </Pressable>
+              <Pressable onPress={() => increaseQuantity(item)} style={styles.quantityButton}>
+                <Feather name="plus" size={24} color="black" />
+              </Pressable>
+              <Pressable onPress={() => deleteItem(item)} style={styles.deleteButton}>
+                <Text style={styles.deleteButtonText}>X</Text>
+              </Pressable>
+            </View>
           </View>
         ))}
       </View>
@@ -273,6 +99,114 @@ const CartScreen = () => {
   );
 };
 
-export default CartScreen;
+const styles = StyleSheet.create({
+  searchContainer: {
+    backgroundColor: "#f3c94a",
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 55,
+  },
+  searchInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 7,
+    gap: 10,
+    backgroundColor: "white",
+    borderRadius: 30,
+    height: 38,
+    flex: 1,
+  },
+  searchIcon: { paddingLeft: 10 },
+  subtotalContainer: {
+    padding: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+  },
+  subtotalText: { fontSize: 18, fontWeight: "400" },
+  totalText: { fontSize: 20, fontWeight: "bold", color: "#333" },
+  emiText: { marginHorizontal: 10, color: "#666" },
+  proceedButton: {
+    backgroundColor: "#FFC72C",
+    padding: 12,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
+  separator: {
+    height: 1,
+    borderColor: "#D0D0D0",
+    borderWidth: 1,
+    marginVertical: 15,
+    marginHorizontal: 10,
+  },
+  cartItemsContainer: { marginHorizontal: 10 },
+  cartItem: {
+    backgroundColor: "white",
+    marginVertical: 8,
+    borderBottomColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    padding: 12,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+    flexDirection: "row",
+  },
+  itemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
+  },
+  itemImage: { width: 100, height: 100, resizeMode: "contain", borderRadius: 10 },
+  itemDetails: { flex: 1, paddingLeft: 12, justifyContent: "center" },
+  badgeContainer: { flexDirection: "row", gap: 8, marginBottom: 4 },
+  badge: {
+    backgroundColor: "#EAEAEA",
+    color: "#555",
+    fontSize: 12,
+    paddingVertical: 3,
+    paddingHorizontal: 7,
+    borderRadius: 6,
+  },
+  itemDesignation: { fontWeight: "bold", fontSize: 16, color: "#333" },
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#666",
+    marginTop: 6,
+  },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  quantityButton: {
+    backgroundColor: "#D8D8D8",
+    padding: 6,
+    borderRadius: 6,
+  },
+  quantityDisplay: {
+    backgroundColor: "#F9F9F9",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+  },
+  deleteButton: {
+    position: "absolute",
+    right: 5,
+    top:-16,
+  },
+  deleteButtonText: { color: "#F07C5D", fontSize: 18, fontWeight: "bold" },
+});
 
-const styles = StyleSheet.create({});
+export default CartScreen;
