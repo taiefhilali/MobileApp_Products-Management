@@ -7,22 +7,24 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  cleanCart,
   decrementQuantity,
   incementQuantity,
   removeFromCart,
 } from "../redux/CartReducer";
 import { useNavigation } from "@react-navigation/native";
+import io from 'socket.io-client';
 
 const CartScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
   console.log(cart);
   const total = cart
-    ?.map((item) => item.price * item.quantity)
+    ?.map((item) => item.prixDeVenteTTC * item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
   const dispatch = useDispatch();
   const increaseQuantity = (item) => {
@@ -34,7 +36,45 @@ const CartScreen = () => {
   const deleteItem = (item) => {
     dispatch(removeFromCart(item));
   };
-  const navigation = useNavigation();
+
+
+  const socket = io('http://10.0.2.2:3000'); // Replace with your backend URL
+
+  useEffect(() => {
+    // Listen for responses from the backend
+    socket.on('orderSuccess', (data) => {
+      console.log('Order placed successfully, order ID:', data.orderId);
+      console.log('Before cleaning cart:', cart); // Log before dispatch
+      dispatch(cleanCart());
+      console.log('After cleaning cart:', cart); // Log after dispatch
+    });
+
+    socket.on('orderError', (error) => {
+      console.error('Order error:', error.message);
+    });
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const handleOrderPlacement = () => {
+    // Prepare data for the order
+    const orderData = {
+      userId: 1, // Static user ID for testing purposes
+      articles: cart.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        price: item.prixDeVenteTTC,
+      })),
+    };
+console.log('===========orderDataorderData=========================');
+console.log(orderData);
+console.log('====================================');
+    // Emit the 'placeOrder' event to the backend
+    socket.emit('placeOrder', orderData);
+  };
  return (
     <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
       <View style={styles.searchContainer}>
@@ -47,14 +87,15 @@ const CartScreen = () => {
 
       <View style={styles.subtotalContainer}>
         <Text style={styles.subtotalText}>Subtotal :</Text>
-        <Text style={styles.totalText}>{total}</Text>
+        <Text style={styles.totalText}>{total} dt</Text>
       </View>
-      <Text style={styles.emiText}>EMI details Available</Text>
-
+{/* 
       <Pressable onPress={() => navigation.navigate("Confirm")} style={styles.proceedButton}>
         <Text>Proceed to Buy ({cart.length}) items</Text>
+      </Pressable> */}
+       <Pressable style={styles.proceedButton} onPress={handleOrderPlacement}>
+        <Text>Commander {cart.length} Article(s)</Text>
       </Pressable>
-
       <Text style={styles.separator} />
 
       <View style={styles.cartItemsContainer}>
@@ -107,7 +148,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     marginHorizontal: 10,
-    marginTop: 55,
+    marginTop: 10,
   },
   searchInput: {
     flexDirection: "row",
@@ -129,7 +170,6 @@ const styles = StyleSheet.create({
   },
   subtotalText: { fontSize: 18, fontWeight: "400" },
   totalText: { fontSize: 20, fontWeight: "bold", color: "#333" },
-  emiText: { marginHorizontal: 10, color: "#666" },
   proceedButton: {
     backgroundColor: "#FFC72C",
     padding: 12,
@@ -187,13 +227,13 @@ const styles = StyleSheet.create({
   quantityContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 5,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: -38,
   },
   quantityButton: {
     backgroundColor: "#D8D8D8",
-    padding: 6,
+    padding: 2,
     borderRadius: 6,
   },
   quantityDisplay: {
