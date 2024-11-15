@@ -37,8 +37,8 @@ const ProductItem = ({ item }) => {
         </Text>
 
         <View style={styles.details}>
-          <Text style={styles.price}>₹{item?.price}</Text>
-          <Text style={styles.rating}>{item?.rating?.rate} ratings</Text>
+          <Text style={styles.price}> </Text>
+          <Text style={styles.rating}>{item.prixDeVenteTTC} dt</Text>
         </View>
 
         <Pressable onPress={() => addItemToCart(item)} style={styles.cartButton}>
@@ -54,50 +54,55 @@ const ProductItem = ({ item }) => {
 };
 
 export default ProductItem;
-
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 15, // Creates rounded corners for the container
+    width: '44%', // Takes up 48% of the container width (with some margin to ensure 2 items per row)
+    borderRadius: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-    overflow: 'hidden', // Ensures child elements stay within rounded borders
-    margin: 10, // Adds some spacing around each item
-    backgroundColor: '#fff', // Adds a white background
+    overflow: 'hidden',
+    margin: 5, // Adds space around the item (controls gap between items)
+    backgroundColor: '#fff',
   },
   pressable: {
     marginHorizontal: 20,
     marginVertical: 25,
   },
   image: {
-    width: 150,
+    width: '100%', // Full width of the item container
     height: 150,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   designation: {
-    width: 150,
+    width: '100%',
     marginTop: 10,
+    fontWeight: 'bold',
   },
   details: {
     marginTop: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   price: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   rating: {
-    color: "#FFC72C",
-    fontWeight: "bold",
+    color: '#FFC72C',
+    fontWeight: 'bold',
+    marginRight: 80,
+    fontSize: 14,
   },
   cartButton: {
-    backgroundColor: "#FFC72C",
+    backgroundColor: '#FFC72C',
     padding: 10,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginHorizontal: 10,
     marginTop: 10,
   },
 });
+
+

@@ -17,7 +17,6 @@ import {
   incementQuantity,
   removeFromCart,
 } from "../redux/CartReducer";
-import { useNavigation } from "@react-navigation/native";
 import io from 'socket.io-client';
 
 const CartScreen = () => {
@@ -64,18 +63,24 @@ const CartScreen = () => {
     const orderData = {
       userId: 1, // Static user ID for testing purposes
       articles: cart.map((item) => ({
-        id: item.id,
+        id: item.id, // Use 'id' instead of 'articleId' to match the backend
         quantity: item.quantity,
         price: item.prixDeVenteTTC,
+        imageUrl: item.Image, // Pass the image URL from the cart
       })),
+      totalPrice: total, // Assuming you have calculated the total price
     };
-console.log('===========orderDataorderData=========================');
-console.log(orderData);
-console.log('====================================');
+  
+    console.log('===========orderData=========================');
+    console.log(orderData);
+    console.log('====================================');
+    
     // Emit the 'placeOrder' event to the backend
     socket.emit('placeOrder', orderData);
   };
- return (
+  
+  
+ return ( 
     <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
       <View style={styles.searchContainer}>
         <Pressable style={styles.searchInput}>

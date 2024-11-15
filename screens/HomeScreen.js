@@ -10,14 +10,13 @@ import {
   TextInput,
   Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { SliderBox } from "react-native-image-slider-box";
 import axios from "axios";
 import ProductItem from "../components/ProductItem";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -169,7 +168,7 @@ const HomeScreen = () => {
   const [addresses, setAddresses] = useState([]);
   const [category, setCategory] = useState("jewelery");
   const { userId, setUserId } = useContext(UserType);
-  const [selectedAddress,setSelectedAdress] = useState("");
+  const [selectedAddress, setSelectedAdress] = useState("");
 
   const [items, setItems] = useState([
     { label: "Men's clothing", value: "men's clothing" },
@@ -179,17 +178,37 @@ const HomeScreen = () => {
   ]);
   const [familles, setFamilles] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log('====================================');
-console.log(familles);
-console.log('====================================');
+
   const [selectedFamille, setSelectedFamille] = useState(null);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  useEffect(() => {
+    console.log('Updated products state:', products);
+  }, [products]);
+  
 
   const fetchProductsForFamille = async (familleId) => {
     setLoadingProducts(true);
     try {
+      // Retrieve cin from AsyncStorage
+      // const cin = await AsyncStorage.getItem("userId");
+      // console.log("CIN retrieved from AsyncStorage:", cin);
+
+      // if (!cin) {
+      //   console.error("No CIN found in local storage.");
+      //   Alert.alert("Error", "User ID not found. Please log in again.");
+      //   setLoadingProducts(false);
+      //   return;
+      // }
+  
+      // Fetch products with familleId and cin as query parameter
       const response = await axios.get(`http://10.0.2.2:5000/api/articles/${familleId}`);
-      setProducts(response.data);
+      //   , {
+      //   params: { cin }, // Use `cin` instead of `userId`
+      // }
+      
+  
+      setProducts(response.data || []);
+console.log('Updated products state:', products); // Check if the state updates correctly
     } catch (error) {
       console.error("Error fetching products:", error.response ? error.response.data : error.message);
       Alert.alert("Error", "Failed to fetch products. Please try again later.");
@@ -197,12 +216,11 @@ console.log('====================================');
       setLoadingProducts(false);
     }
   };
-  
 
   const handleFamillePress = (famille) => {
     setSelectedFamille(famille);
     fetchProductsForFamille(famille.id);  // Assuming `id` is the identifier for the famille
-  };
+  };  
   // Fetch familles on component mount
   useEffect(() => {
     const fetchFamilles = async () => {
@@ -253,7 +271,6 @@ console.log('====================================');
 
     fetchUser();
   }, []);
-  console.log("address", addresses);
   return (
     <>
       <SafeAreaView
@@ -271,7 +288,7 @@ console.log('====================================');
               flexDirection: "row",
               alignItems: "center",
               borderRadius: 10,
-              marginTop:30
+              marginTop: 30
             }}
           >
             <Pressable
@@ -300,58 +317,58 @@ console.log('====================================');
             <Feather name="mic" size={24} color="black" />
           </View>
           <ScrollView>
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
-    {familles.map((item, index) => (
-      <Pressable
-        key={index}
-        style={{
-          width: '48%',  // Ensures two items fit per row
-          marginBottom: 20,  // Adds margin at the bottom to separate rows
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={() => {
-          console.log("Selected famille ID:", item.id);  // Log the selected famille ID
-          setSelectedFamille(item.id);  // Update selected famille
-    fetchProductsForFamille(item.id);  // Fetch products for this famille
-        }}
-      >
-        <View
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 50,  // Creates the circle behind the image
-            backgroundColor: 'gray',  // Set the background color to gray
-            justifyContent: 'center',  // Center the image inside the circle
-            alignItems: 'center',  // Center the image inside the circle
-            borderWidth: 1,
-          }}
-        >
-          <Image
-            style={{
-              width: 90,  // Make the image slightly smaller than the circle
-              height: 90,
-              borderRadius: 45,  // Half of the new width/height to make the image circular
-              resizeMode: 'cover',
-            }}
-            source={{ uri: item.Image }}
-          />
-        </View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+              {familles.map((item, index) => (
+                <Pressable
+                  key={index}
+                  style={{
+                    width: '48%',  // Ensures two items fit per row
+                    marginBottom: 20,  // Adds margin at the bottom to separate rows
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    console.log("Selected famille ID:", item.id);  // Log the selected famille ID
+                    setSelectedFamille(item.id);  // Update selected famille
+                    fetchProductsForFamille(item.id);  // Fetch products for this famille
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 50,  // Creates the circle behind the image
+                      backgroundColor: 'gray',  // Set the background color to gray
+                      justifyContent: 'center',  // Center the image inside the circle
+                      alignItems: 'center',  // Center the image inside the circle
+                      borderWidth: 1,
+                    }}
+                  >
+                    <Image
+                      style={{
+                        width: 90,  // Make the image slightly smaller than the circle
+                        height: 90,
+                        borderRadius: 45,  // Half of the new width/height to make the image circular
+                        resizeMode: 'cover',
+                      }}
+                      source={{ uri: item.Image }}
+                    />
+                  </View>
 
-        <Text
-          style={{
-            textAlign: "center",
-            marginTop: 5,  // Fixes duplicate marginTop
-            fontSize: 20,
-            fontWeight: "500",
-          }}
-        >
-          {item?.libelle}
-        </Text>
-      </Pressable>
-    ))}
-  </View>
-</ScrollView>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 5,  // Fixes duplicate marginTop
+                      fontSize: 20,
+                      fontWeight: "500",
+                    }}
+                  >
+                    {item?.libelle}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </ScrollView>
 
 
           {/* <SliderBox
@@ -362,7 +379,7 @@ console.log('====================================');
             inactiveDotColor="#90A4AE"
             ImageComponentStyle={{ width: "100%" }}
           /> */}
-{/* 
+          {/* 
           <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
             Trending Deals of the week
           </Text>
@@ -505,27 +522,27 @@ console.log('====================================');
             />
           </View>
           {selectedFamille && (
-  <View
-    style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      marginTop: 20,
-    }}
-  >
-    {loadingProducts ? (
-      <ActivityIndicator size="large" color="#0000ff" />
-    ) : products.length > 0 ? (
-      products.map((item, index) => (
-        <ProductItem item={item} key={index} />
-      ))
-    ) : (
-      <Text>No products available</Text>  // Optional message if no products are found
-    )}
-  </View>
-)}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                marginTop: 20,
+              }}
+            >
+              {loadingProducts ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : products.length > 0 ? (
+                products.map((item, index) => (
+                  <ProductItem item={item} key={index} />
+                ))
+              ) : (
+                <Text>No products available</Text>  // Optional message if no products are found
+              )}
+            </View>
+          )}
 
-    </ScrollView>
+        </ScrollView>
 
       </SafeAreaView>
 
@@ -558,7 +575,7 @@ console.log('====================================');
             {/* already added addresses */}
             {addresses?.map((item, index) => (
               <Pressable
-              onPress={() => setSelectedAdress(item)}
+                onPress={() => setSelectedAdress(item)}
                 style={{
                   width: 140,
                   height: 140,
@@ -570,7 +587,7 @@ console.log('====================================');
                   gap: 3,
                   marginRight: 15,
                   marginTop: 10,
-                  backgroundColor:selectedAddress === item ? "#FBCEB1" : "white"
+                  backgroundColor: selectedAddress === item ? "#FBCEB1" : "white"
                 }}
               >
                 <View

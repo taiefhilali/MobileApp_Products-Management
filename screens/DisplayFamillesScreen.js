@@ -29,7 +29,7 @@ const DisplayFamille = () => {
   const fetchProductsForFamille = async (familleId) => {
     setLoadingProducts(true);
     try {
-      const response = await axios.get(`http://10.0.2.2:5000/api/articles/{${familleId}}`);
+      const response = await axios.get(`http://10.0.2.2:5000/api/articles/${familleId}`);
       setProducts(response.data);
       setLoadingProducts(false);
     } catch (error) {

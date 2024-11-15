@@ -9,7 +9,7 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -39,32 +39,38 @@ const LoginScreen = () => {
       identifier: email, // Use email as the identifier (can be CIN or email)
       password: password,
     };
-  
+
     axios
       .post("http://10.0.2.2:5000/api/users/login", user)
-      .then((response) => {
+      .then(async (response) => {
         const token = response.data.token;
-        
-        // Store the token in AsyncStorage
-        AsyncStorage.setItem("authToken", token);
-        
-        // Optionally, store additional user details if needed
         const userDetails = response.data.user;
-        AsyncStorage.setItem("userDetails", JSON.stringify(userDetails));
-  
-        // Navigate to the Main screen
-        navigation.replace("Main");
+        const userId = userDetails.cin; // Assuming `userId` is stored as `_id` in response data
+        console.log('=======userDetails=============================');
+        console.log(userDetails);
+        console.log('===============userDetails=====================');
+        try {
+          // Store the token and user details in AsyncStorage
+          await AsyncStorage.setItem("authToken", token);
+          await AsyncStorage.setItem("userDetails", JSON.stringify(userDetails));
+          await AsyncStorage.setItem("userId", userId); // Save userId separately
+
+          // Navigate to the Main screen
+          navigation.replace("Main");
+        } catch (err) {
+          console.log("Error saving user data to AsyncStorage:", err);
+        }
       })
       .catch((error) => {
         Alert.alert("Login Error", "Invalid credentials. Please try again.");
         console.log(error.response ? error.response.data : error.message);
       });
   };
-  
-  
+
+
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50 }}
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center", marginTop: 50 }}
     >
       <View>
         <Image style={styles.logo} source={require("../assets/images/sou9ek.png")} />
@@ -81,7 +87,7 @@ const LoginScreen = () => {
               marginLeft: 40,
             }}
           >
-           Connectez-vous à votre compte          </Text>
+            Connectez-vous à votre compte          </Text>
         </View>
 
         <View style={{ marginTop: 70 }}>
@@ -209,6 +215,6 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   logo: {
     width: 400,
-    height:200,
+    height: 200,
   },
 });
