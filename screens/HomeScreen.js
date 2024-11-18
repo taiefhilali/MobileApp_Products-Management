@@ -23,9 +23,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../UserContext";
-import jwt_decode from "jwt-decode";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
 
@@ -186,29 +185,76 @@ const HomeScreen = () => {
   }, [products]);
   
 
-  const fetchProductsForFamille = async (familleId) => {
-    setLoadingProducts(true);
-    try {
-      // Retrieve cin from AsyncStorage
-      // const cin = await AsyncStorage.getItem("userId");
-      // console.log("CIN retrieved from AsyncStorage:", cin);
 
-      // if (!cin) {
-      //   console.error("No CIN found in local storage.");
-      //   Alert.alert("Error", "User ID not found. Please log in again.");
+  const fetchProductsForFamille = async (familleId) => {
+    setLoadingProducts(true); // Start loading indicator
+    try {
+      // Retrieve userId and token from AsyncStorage
+      // const userId = await AsyncStorage.getItem("userId");
+      // const token = await AsyncStorage.getItem("authToken");
+      // const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTczMTY2NzAxMSwiZXhwIjoxNzM1OTg3MDExfQ.mbiR720i2LxnaINmBa-07eWwQvpjjWfJBdbLIge13HU";
+
+      console.log("User ID retrieved from AsyncStorage:", userId);
+      console.log("Token retrieved from AsyncStorage:", token);
+      console.log("Retrieved Token:", token);
+      // if (!token) {
+      //   console.error("Token not found in AsyncStorage.");
+      //   Alert.alert("Error", "Authentication token is missing. Please log in again.");
+      //   return;
+      // }
+      
+      // // Handle case where userId or token is not found
+      // if (!userId || !token) {
+      //   console.error("User ID or token is missing.");
+      //   Alert.alert("Error", "Authentication details not found. Please log in again.");
       //   setLoadingProducts(false);
       //   return;
       // }
   
-      // Fetch products with familleId and cin as query parameter
-      const response = await axios.get(`http://10.0.2.2:5000/api/articles/${familleId}`);
-      //   , {
-      //   params: { cin }, // Use `cin` instead of `userId`
-      // }
+      // Fetch products using familleId, userId, and token
+      const response = await axios.get(
+        `http://10.0.2.2:5000/api/articles/${familleId}`
+        // {
+        //   // params: { userId }, // Include userId as a query parameter
+        //   headers: {
+        //     Authorization: `Bearer ${token}`, // Include token in the headers
+        //   },
+        // }
+      );
+  
+      setProducts(response.data || []); // Update products state
+      console.log('Updated products state:', response.data); // Check fetched data
+    } catch (error) {
+      console.error("Error fetching products:", error.response ? error.response.data : error.message);
+      Alert.alert("Error", "Failed to fetch products. Please try again later.");
+    } finally {
+      setLoadingProducts(false); // End loading indicator
+    }
+  };
+  const fetchAllArticles = async () => {
+    setLoadingProducts(true);
+    try {
+      // const token = await AsyncStorage.getItem("authToken");
+
+      // Fetch articles and pass familleId as a query parameter
+      const response = await axios.get(
+        `http://10.0.2.2:5000/api/articles/all`,
+        {
+          params: { familleId: selectedFamille }, 
+          // headers: {
+          //   Authorization: `Bearer ${token}`, // Include token in the headers
+          // },// Include userId
+        }
+      );
       
   
-      setProducts(response.data || []);
-console.log('Updated products state:', products); // Check if the state updates correctly
+      // Filter articles by familleId (just in case it's needed again)
+      const filteredProducts = selectedFamille
+        ? response.data.filter(product => product.familleId === selectedFamille)
+        : response.data;
+  
+      setProducts(filteredProducts || []);
+      console.log('Updated products state:', filteredProducts); // Debugging state update
     } catch (error) {
       console.error("Error fetching products:", error.response ? error.response.data : error.message);
       Alert.alert("Error", "Failed to fetch products. Please try again later.");
@@ -216,7 +262,9 @@ console.log('Updated products state:', products); // Check if the state updates 
       setLoadingProducts(false);
     }
   };
-
+  
+  
+  
   const handleFamillePress = (famille) => {
     setSelectedFamille(famille);
     fetchProductsForFamille(famille.id);  // Assuming `id` is the identifier for the famille
@@ -261,16 +309,16 @@ console.log('Updated products state:', products); // Check if the state updates 
       console.log("error", error);
     }
   };
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = await AsyncStorage.getItem("authToken");
-      const decodedToken = jwt_decode(token);
-      const userId = decodedToken.userId;
-      setUserId(userId);
-    };
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const token = await AsyncStorage.getItem("authToken");
+  //     const decodedToken = jwt_decode(token);
+  //     const userId = decodedToken.userId;
+  //     setUserId(userId);
+  //   };
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
   return (
     <>
       <SafeAreaView
@@ -330,7 +378,8 @@ console.log('Updated products state:', products); // Check if the state updates 
                   onPress={() => {
                     console.log("Selected famille ID:", item.id);  // Log the selected famille ID
                     setSelectedFamille(item.id);  // Update selected famille
-                    fetchProductsForFamille(item.id);  // Fetch products for this famille
+                    fetchAllArticles();
+                    // fetchProductsForFamille(item.id);  // Fetch products for this famille
                   }}
                 >
                   <View
@@ -522,25 +571,25 @@ console.log('Updated products state:', products); // Check if the state updates 
             />
           </View>
           {selectedFamille && (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                marginTop: 20,
-              }}
-            >
-              {loadingProducts ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-              ) : products.length > 0 ? (
-                products.map((item, index) => (
-                  <ProductItem item={item} key={index} />
-                ))
-              ) : (
-                <Text>No products available</Text>  // Optional message if no products are found
-              )}
-            </View>
-          )}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginTop: 20,
+        }}
+      >
+        {loadingProducts ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : products.length > 0 ? (
+          products.map((item, index) => (
+            <ProductItem item={item} key={index} />
+          ))
+        ) : (
+          <Text>No products available</Text>
+        )}
+      </View>
+    )}
 
         </ScrollView>
 

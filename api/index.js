@@ -206,7 +206,7 @@ app.post("/orders", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    //create an array of product objects from the cart Items
+    //create an array of product objects from the cart Items 
     const products = cartItems.map((item) => ({
       name: item?.title,
       quantity: item.quantity,
