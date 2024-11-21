@@ -10,7 +10,7 @@ const UserProfileHeader = () => {
     const fetchUserData = async () => {
       try {
         // Retrieve user data from AsyncStorage (or localStorage for web)
-        const userData = await AsyncStorage.getItem("loggedInUser"); // Adjust key name as needed
+        const userData = await AsyncStorage.getItem("userDetails"); // Adjust key name as needed
         if (userData) {
           setUser(JSON.parse(userData)); // Parse JSON if stored as a string
         }

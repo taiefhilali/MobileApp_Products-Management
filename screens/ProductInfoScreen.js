@@ -217,7 +217,7 @@ const ProductInfoScreen = () => {
           }}
           onPress={() => navigation.navigate("Home")}
         >
-          <Text>Retour aux articles</Text>
+          <Text>Retour aux Familles</Text>
         </Pressable>
       </View>
     </ScrollView>

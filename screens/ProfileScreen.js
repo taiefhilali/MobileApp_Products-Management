@@ -46,21 +46,23 @@ const ProfileScreen = () => {
     });
   }, []);
   const [user, setUser] = useState();
+
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `http://10.0.2.2:8000/profile/${userId}`
-        );
-        const { user } = response.data;
-        setUser(user);
+        // Retrieve user data from AsyncStorage (or localStorage for web)
+        const userData = await AsyncStorage.getItem("userDetails"); // Adjust key name as needed
+        if (userData) {
+          setUser(JSON.parse(userData)); // Parse JSON if stored as a string
+        }
       } catch (error) {
-        console.log("error", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUserProfile();
+    fetchUserData();
   }, []);
+
   const logout = () => {
     clearAuthToken();
   };
@@ -90,7 +92,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={{ padding: 10, flex: 1, backgroundColor: "white" }}>
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-        Welcome {user?.name}
+        Welcome {user?.nom}
       </Text>
 
       <View
@@ -101,30 +103,45 @@ const ProfileScreen = () => {
           marginTop: 12,
         }}
       >
-        <Pressable
-          style={{
-            padding: 10,
-            backgroundColor: "#E0E0E0",
-            borderRadius: 25,
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Your orders</Text>
-        </Pressable>
 
-        <Pressable
-          style={{
-            padding: 10,
-            backgroundColor: "#E0E0E0",
-            borderRadius: 25,
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Your Account</Text>
-        </Pressable>
+
       </View>
 
-      <View
+  
+
+      <ScrollView style={styles.container}>
+      {user ? (
+        <View style={styles.card}>
+          {/* Profile Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: user.profileImage }}
+              style={styles.image}
+            />
+          </View>
+
+          {/* User Name */}
+          <Text style={styles.nom}>
+            {user.nom} {user.prenom}
+          </Text>
+
+          {/* User Details */}
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailItem}>
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.value}>{user.email}</Text>
+              <View style={styles.detailItem}>
+              <Text style={styles.label}>CIN:</Text>
+              <Text style={styles.value}>{user.cin}</Text>
+            </View>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <Text style={styles.loadingText}>Loading user data...</Text>
+      )}
+    </ScrollView>
+    <View
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -132,16 +149,7 @@ const ProfileScreen = () => {
           marginTop: 12,
         }}
       >
-        <Pressable
-          style={{
-            padding: 10,
-            backgroundColor: "#E0E0E0",
-            borderRadius: 25,
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Buy Again</Text>
-        </Pressable>
+
 
         <Pressable
           onPress={logout}
@@ -154,45 +162,73 @@ const ProfileScreen = () => {
         >
           <Text style={{ textAlign: "center" }}>Logout</Text>
         </Pressable>
-      </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : orders.length > 0 ? (
-          orders.map((order) => (
-            <Pressable
-              style={{
-                marginTop: 20,
-                padding: 15,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: "#d0d0d0",
-                marginHorizontal: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              key={order._id}
-            >
-              {/* Render the order information here */}
-              {order.products.slice(0, 1)?.map((product) => (
-                <View style={{ marginVertical: 10 }} key={product._id}>
-                  <Image
-                    source={{ uri: product.image }}
-                    style={{ width: 100, height: 100, resizeMode: "contain" }}
-                  />
-                </View>
-              ))}
-            </Pressable>
-          ))
-        ) : (
-          <Text>No orders found</Text>
-        )}
-      </ScrollView>
+      </View> 
     </ScrollView>
   );
 };
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 3,
+    padding: 20,
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  imageContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    overflow: "hidden",
+    marginBottom: 16,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  detailsContainer: {
+    width: "100%",
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    paddingTop: 16,
+  },
+  detailItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  label: {
+    fontSize: 14,
+    color: "#666",
+  },
+  value: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333",
+  },
+  loadingText: {
+    textAlign: "center",
+    fontSize: 16,
+    marginTop: 20,
+  },
+});

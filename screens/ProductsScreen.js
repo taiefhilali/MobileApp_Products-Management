@@ -57,6 +57,27 @@ const ProductsScreen = ({ route }) => {
         {/* Back Text */}
         <Text style={{ fontWeight: 'bold', color: 'white', marginLeft: 5 }}>Back</Text>
       </Pressable>
+      <Pressable
+          onPress={() => navigation.navigate("Cart")} // Navigates to Cart screen
+          style={{
+            backgroundColor: "#FFC72C",
+            padding: 10,
+            borderRadius: 20,
+            width: 100,
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            marginLeft:260,
+            marginTop: -62,
+        
+          }}
+        >
+          {/* Shopping Cart Icon */}
+          <Ionicons name="cart" size={20} color="white" />
+          {/* Cart Text */}
+          <Text style={{ fontWeight: "bold", color: "white", marginLeft: 5 }}>Cart</Text>
+        </Pressable>
     <View
           style={{
             flexDirection: 'row',
@@ -80,3 +101,4 @@ const ProductsScreen = ({ route }) => {
 };
 
 export default ProductsScreen;
+    
