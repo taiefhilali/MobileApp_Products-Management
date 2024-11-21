@@ -81,13 +81,12 @@ const CartScreen = () => {
   
   
  return ( 
-    <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
+    <ScrollView style={{ marginTop: 20, flex: 1, backgroundColor: "white" }}>
       <View style={styles.searchContainer}>
         <Pressable style={styles.searchInput}>
           <AntDesign style={styles.searchIcon} name="search1" size={22} color="black" />
           <TextInput placeholder="Search" />
         </Pressable>
-        <Feather name="mic" size={24} color="black" />
       </View>
 
       <View style={styles.subtotalContainer}>

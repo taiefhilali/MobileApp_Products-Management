@@ -40,9 +40,7 @@ const ProfileScreen = () => {
             marginRight: 12,
           }}
         >
-          <Ionicons name="notifications-outline" size={24} color="black" />
 
-          <AntDesign name="search1" size={24} color="black" />
         </View>
       ),
     });
