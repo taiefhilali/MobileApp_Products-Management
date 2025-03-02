@@ -30,14 +30,14 @@ const UserProfileHeader = () => {
         flexDirection: "row",
         alignItems: "center",
         borderRadius: 30,
-        marginTop: 40,
+        marginTop: 25,
         height: 60,
       }}
     >
       {user ? (
         <>
           <Image
-            source={{ uri: user.image }} // Replace `user.image` with the actual key
+            source={{ uri: user.profileImage }} // Replace `user.image` with the actual key
             style={{
               width: 40,
               height: 40,
@@ -46,7 +46,7 @@ const UserProfileHeader = () => {
             }}
           />
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-            {user.firstName} {user.lastName}
+            {user.nom} {user.prenom}
           </Text>
         </>
       ) : (

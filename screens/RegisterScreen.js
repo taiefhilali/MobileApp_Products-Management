@@ -14,7 +14,8 @@ import { MaterialIcons, AntDesign, Ionicons, FontAwesome5 } from "@expo/vector-i
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-
+import Toast from 'react-native-toast-message';
+ 
 const RegisterScreen = () => {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
@@ -26,8 +27,88 @@ const RegisterScreen = () => {
   const [cin, setCin] = useState("");
   const [profileImage, setProfileImage] = useState(null); // Updated to null for handling file URIs
   const [password, setPassword] = useState("");
+  const [nomError, setNomError] = useState("");
+  const [prenomError, setPrenomError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [adresseError, setAdresseError] = useState("");
+  const [villeError, setVilleError] = useState("");
+  const [tel1Error, setTel1Error] = useState("");
+  const [cinError, setCinError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const navigation = useNavigation();
+  const validateInputs = () => {
+    let isValid = true;
+
+    // Name validation
+    if (!nom.trim()) {
+      setNomError("Nom is required.");
+      isValid = false;
+    } else {
+      setNomError("");
+    }
+
+    // Prenom validation
+    if (!prenom.trim()) {
+      setPrenomError("Prenom is required.");
+      isValid = false;
+    } else {
+      setPrenomError("");
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      setEmailError("Please enter a valid email.");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    // Address validation
+    if (!adresse.trim()) {
+      setAdresseError("Adresse is required.");
+      isValid = false;
+    } else {
+      setAdresseError("");
+    }
+
+    // Ville validation
+    if (!ville.trim()) {
+      setVilleError("Ville is required.");
+      isValid = false;
+    } else {
+      setVilleError("");
+    }
+
+    // Phone number validation
+    const phoneRegex = /^\d{8}$/;
+    if (!tel1 || !phoneRegex.test(tel1)) {
+      setTel1Error("Enter a valid 8-digit phone number.");
+      isValid = false;
+    } else {
+      setTel1Error("");
+    }
+
+    // CIN validation
+    const cinRegex = /^\d{8}$/;
+    if (!cin || !cinRegex.test(cin)) {
+      setCinError("CIN must be an 8-digit number.");
+      isValid = false;
+    } else {
+      setCinError("");
+    }
+
+    // Password validation
+    if (!password || password.length < 6) {
+      setPasswordError("Password must be at least 6 characters.");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    return isValid;
+  };
 
   // Function to handle image selection
   const pickImage = async () => {
@@ -49,47 +130,67 @@ const RegisterScreen = () => {
     }
   };
 
-  const handleRegister = async () => {
-    const formData = new FormData();
 
+  const handleRegister = async () => {
+    if (!validateInputs()) {
+      return; // Exit if validation fails
+    }
+  
+    const formData = new FormData();
     formData.append("nom", nom);
     formData.append("prenom", prenom);
     formData.append("email", email);
     formData.append("adresse", adresse);
     formData.append("ville", ville);
     formData.append("tel1", tel1);
-    formData.append("tel2", tel2);
+    formData.append("tel2", tel2 || ""); // Optional field
     formData.append("cin", cin);
     formData.append("password", password);
-
-    // Check if an image was selected, then add it to formData
+  
     if (profileImage) {
       const uriParts = profileImage.split(".");
       const fileType = uriParts[uriParts.length - 1];
-
       formData.append("profileImage", {
         uri: profileImage,
         name: `profile.${fileType}`,
         type: `image/${fileType}`,
       });
     }
-
+  
     try {
       const response = await axios.post("http://10.0.2.2:5000/api/users/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response);
-      Alert.alert("Registration successful", "You have been registered successfully");
+      // Show success toast
+      Toast.show({
+        type: 'success',
+        position: 'bottom',
+        text1: 'Inscription réussie',
+        text2: 'Veuillez attendre la vérification de votre compte.',
+        visibilityTime: 6000,
+        autoHide: true,
+      });
+      
+      // Reset form fields
       setNom(""); setPrenom(""); setEmail(""); setAdresse(""); setVille("");
       setTel1(""); setTel2(""); setCin(""); setProfileImage(null); setPassword("");
     } catch (error) {
-      Alert.alert("Registration Error", "An error occurred while registering");
+      // Show error toast
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Erreur d`inscription',
+        text2: 'Une erreur s`est produite lors de l`inscription.',
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+  
       console.log("registration failed", error);
     }
   };
-
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,37 +200,69 @@ const RegisterScreen = () => {
 
       <KeyboardAvoidingView>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Register to your Account</Text>
+          {/* <Text style={styles.headerText}>Register to your Account</Text> */}
         </View>
 
         {/* Two-Column Layout for Input Fields */}
         <View style={styles.form}>
           <View style={styles.row}>
-            <TextInputField icon="ios-person" value={nom} onChangeText={setNom} placeholder="Nom" />
+            <TextInputField icon="ios-person" value={nom} onChangeText={setNom} placeholder="Nom"
+
+            />
+            {nomError ? <Text style={styles.errorText}>{nomError}</Text> : null}
+
             <TextInputField icon="ios-person" value={prenom} onChangeText={setPrenom} placeholder="Prenom" />
-          </View>
-          <View style={styles.row}>
-            <TextInputField icon="email" iconLib={MaterialIcons} value={email} onChangeText={setEmail} placeholder="Email" />
-            <TextInputField icon="lock1" iconLib={AntDesign} value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} />
+            {prenomError ? <Text style={styles.errorText}>{prenomError}</Text> : null}
 
           </View>
-          
+          <View style={styles.row}>
+         
+                     <TextInput
+              
+              style={styles.textInput}
+              placeholder=" Email"
+              keyboardType="email-address"
+              icon="email"
+              iconLib={MaterialIcons}
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+
+
+
+
+          </View>
+
           <View style={styles.row}>
             <TextInputField icon="location-sharp" value={adresse} onChangeText={setAdresse} placeholder="Addresse" />
+            {adresseError ? <Text style={styles.errorText}>{adresseError}</Text> : null}
+
             <TextInputField icon="location" value={ville} onChangeText={setVille} placeholder="ville" />
+            {villeError ? <Text style={styles.errorText}>{villeError}</Text> : null}
+
 
           </View>
           <View style={styles.row}>
             <TextInputField icon="call" value={tel1} onChangeText={setTel1} placeholder="tel 1" keyboardType="phone-pad" />
+            {tel1Error ? <Text style={styles.errorText}>{tel1Error}</Text> : null}
+
             <TextInputField icon="call" value={tel2} onChangeText={setTel2} placeholder="tel 2 " keyboardType="phone-pad" />
+
           </View>
           <View style={styles.row}>
             <TextInputField icon="id-card" iconLib={FontAwesome5} value={cin} onChangeText={setCin} placeholder="CIN" keyboardType="numeric" />
+            {cinError ? <Text style={styles.errorText}>{cinError}</Text> : null}
+            <TextInputField icon="lock1" iconLib={AntDesign} value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} />
+
+            {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
           </View>
-     
+
           <View style={styles.row}>
             <Pressable onPress={pickImage} style={styles.imagePickerButton}>
-              <Text style={styles.imagePickerButtonText}>Pick Profile Image</Text>
+              <Text style={styles.imagePickerButtonText}>Choisir une image de profil</Text>
             </Pressable>
             {profileImage && (
               <Image source={{ uri: profileImage }} style={styles.previewImage} />
@@ -139,10 +272,10 @@ const RegisterScreen = () => {
 
         {/* Register Button */}
         <Pressable onPress={handleRegister} style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Register</Text>
+          <Text style={styles.registerButtonText}>Inscrivez-vous</Text>
         </Pressable>
         <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>Already have an account? Sign In</Text>
+          <Text style={styles.backButtonText}>Vous avez déjà un compte ? Connectez-vous </Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -150,17 +283,17 @@ const RegisterScreen = () => {
 };
 
 // Component for individual input fields
-const TextInputField = ({ 
-  icon, 
-  iconLib: IconLib = Ionicons, 
-  value, 
-  onChangeText, 
-  placeholder, 
-  secureTextEntry = false, 
-  keyboardType = "default" 
+const TextInputField = ({
+  icon,
+  iconLib: IconLib = Ionicons,
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry = false,
+  keyboardType = "default"
 }) => (
   <View style={styles.inputContainer}>
-    {IconLib && <IconLib name={icon} size={20} color="gray" style={styles.icon} />} 
+    {IconLib && <IconLib name={icon} size={20} color="gray" style={styles.icon} />}
     <TextInput
       value={value}
       onChangeText={onChangeText}
@@ -180,7 +313,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 400,
-    height:200,
+    height: 200,
   },
   header: {
     alignItems: "center",
@@ -209,6 +342,12 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     marginRight: 10, // Add margin to create space between fields
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
+  },
+
   icon: { marginRight: 8 },
   input: {
     color: "gray",
@@ -237,8 +376,8 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 16,
   },
-   // Add other styles here
-   imagePickerButton: {
+  // Add other styles here
+  imagePickerButton: {
     backgroundColor: "#FEBE10",
     padding: 10,
     borderRadius: 5,
@@ -254,6 +393,20 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginTop: 10,
   },
+textInput: {
+  color: 'gray',             // Text color
+  marginVertical: 10,        // Vertical margin
+  width: 310,
+  height:40,                // Set a fixed width (you can adjust as needed)
+  fontSize: 16,              // Font size for the input text
+  backgroundColor: '#cccccc', // Gray background color
+  borderRadius: 10,          // Border radius of 15
+  paddingHorizontal: 15,     // Padding for horizontal text input
+  paddingVertical: 10,       // Padding for vertical text input
+  borderWidth: 1,            // Optional: Border width
+  borderColor: '#ccc',       // Optional: Border color (light gray)
+}
+
 });
 
 export default RegisterScreen;

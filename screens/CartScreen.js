@@ -18,6 +18,7 @@ import {
   removeFromCart,
 } from "../redux/CartReducer";
 import io from 'socket.io-client';
+import UserProfileHeader from "./UserProfileHeader";
 
 const CartScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -82,11 +83,12 @@ const CartScreen = () => {
   
  return ( 
     <ScrollView style={{ marginTop: 20, flex: 1, backgroundColor: "white" }}>
-      <View style={styles.searchContainer}>
-        <Pressable style={styles.searchInput}>
+      <View>
+      <UserProfileHeader/>
+        {/* <Pressable style={styles.searchInput}>
           <AntDesign style={styles.searchIcon} name="search1" size={22} color="black" />
           <TextInput placeholder="Search" />
-        </Pressable>
+        </Pressable> */}
       </View>
 
       <View style={styles.subtotalContainer}>
@@ -147,10 +149,10 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   searchContainer: {
     backgroundColor: "#f3c94a",
-    padding: 10,
+    padding: 30,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 30,
     marginHorizontal: 10,
     marginTop: 10,
   },

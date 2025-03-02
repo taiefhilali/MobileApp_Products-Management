@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet } from "react-native";
+import React,{useEffect,useState} from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/LoginScreen";
@@ -18,8 +18,23 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ConfirmationScreen from "../screens/ConfirmationScreen";
 import OrderScreen from "../screens/OrderScreen";
 import ProductsScreen from "../screens/ProductsScreen";
+import Toast from 'react-native-toast-message';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackNavigator = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  useEffect(() => {
+    // Check if the user is logged in
+    const checkLoginStatus = async () => {
+      const userToken = await AsyncStorage.getItem('authToken'); // Assuming 'userToken' is stored upon login
+      if (userToken) {
+        setIsLoggedIn(true); // User is logged in
+      }
+    };
+
+    checkLoginStatus(); // Check login status on component mount
+  }, []);
+
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   function BottomTabs() {
@@ -75,8 +90,11 @@ const StackNavigator = () => {
     );
   }
   return (
+    <>
+
     <NavigationContainer>
-      <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -130,6 +148,8 @@ const StackNavigator = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    <Toast ref={(ref) => Toast.setRef(ref)} />
+ </>
   );
 };
 

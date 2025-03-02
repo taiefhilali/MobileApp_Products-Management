@@ -15,6 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from 'react-native-toast-message';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ const LoginScreen = () => {
           navigation.replace("Main");
         }
       } catch (err) {
-        console.log("Error checking login status:", err);
+        console.log(" checking login status:", err);
       }
     };
     checkLoginStatus();
@@ -60,36 +61,43 @@ const LoginScreen = () => {
 
     return isValid;
   };
-
   const handleLogin = () => {
     if (!validateInputs()) {
       return;
     }
-
+  
     const user = {
       identifier: email,
       password,
     };
-
+  
     axios
       .post("http://10.0.2.2:5000/api/users/login", user)
       .then(async (response) => {
         const token = response.data.token;
         const userDetails = response.data.user;
         const userId = userDetails.cin;
-
+  
         try {
           await AsyncStorage.setItem("authToken", token);
           await AsyncStorage.setItem("userDetails", JSON.stringify(userDetails));
           await AsyncStorage.setItem("userId", userId);
-
+  
           navigation.replace("Main");
         } catch (err) {
           console.log("Error saving user data:", err);
         }
       })
       .catch((error) => {
-        Alert.alert("Login Error", "Invalid credentials. Please try again.");
+        // Show French toast for login error
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Erreur de connexion',
+          text2: 'Identifiants invalides. Veuillez réessayer.',
+          visibilityTime: 5000,
+          autoHide: true,
+        });
         console.log(error.response ? error.response.data : error.message);
       });
   };
@@ -104,7 +112,7 @@ const LoginScreen = () => {
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={styles.title}>Connectez-vous à votre compte</Text>
+          {/* <Text style={styles.title}>Connectez-vous à votre compte</Text> */}
         </View>
 
         <View style={styles.inputContainer}>
@@ -144,8 +152,14 @@ const LoginScreen = () => {
           style={{ marginTop: 15 }}
         >
           <Text style={styles.registerText}>
-            Don't have an account? Sign Up
-          </Text>
+          Vous n'avez pas de compte ? Inscrivez-vous
+
+
+
+
+
+
+</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -166,7 +180,7 @@ const styles = StyleSheet.create({
     color: "#041E42",
   },
   inputContainer: {
-    marginTop: 50,
+    marginTop: 60,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -194,8 +208,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FEBE10",
     borderRadius: 6,
     padding: 15,
-    marginTop: 30,
-    marginLeft:65
+    marginLeft:65,
+    marginTop: 50,
   },
   loginButtonText: {
     textAlign: "center",

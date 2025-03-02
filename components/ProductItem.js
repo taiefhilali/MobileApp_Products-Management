@@ -55,7 +55,7 @@ const ProductItem = ({ item }) => {
         }}
       >
         {/* Promotion Badge */}
-        {item.promotionPercentage && (
+        {item.promotionPercentage >=0.1 && (
           <View style={styles.promotionBadge}>
             <Text style={styles.promotionBadgeText}>En Promotion</Text>
           </View>

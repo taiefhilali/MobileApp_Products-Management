@@ -47,8 +47,6 @@ const ProductsScreen = ({ route }) => {
           justifyContent: 'center',
           marginTop: 20,
           flexDirection: 'row', // To place the icon and text side by side
-          alignItems: 'center', // Vertically center the icon and text
-          justifyContent: 'center',
         }}
       >
         {/* Back Arrow Icon */}
@@ -67,7 +65,6 @@ const ProductsScreen = ({ route }) => {
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
-            alignItems: "center",
             marginLeft:260,
             marginTop: -62,
         
