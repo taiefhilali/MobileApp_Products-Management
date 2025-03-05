@@ -338,9 +338,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#D0D0D0",
     paddingVertical: 5,
     borderRadius: 5,
-    width: 150, // Smaller width for two-column layout
+    width: 150, 
     paddingLeft: 8,
-    marginRight: 10, // Add margin to create space between fields
+    marginRight: 10, 
   },
   errorText: {
     color: "red",
@@ -351,8 +351,8 @@ const styles = StyleSheet.create({
   icon: { marginRight: 8 },
   input: {
     color: "gray",
-    width: "100%", // Adjust to fill the container
-    fontSize: 14, // Smaller font size
+    width: "100%", 
+    fontSize: 14, 
   },
   registerButton: {
     width: 200,
@@ -394,17 +394,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 textInput: {
-  color: 'gray',             // Text color
-  marginVertical: 10,        // Vertical margin
+  color: 'gray',           
+  marginVertical: 10,        
   width: 310,
-  height:40,                // Set a fixed width (you can adjust as needed)
-  fontSize: 16,              // Font size for the input text
-  backgroundColor: '#cccccc', // Gray background color
-  borderRadius: 10,          // Border radius of 15
-  paddingHorizontal: 15,     // Padding for horizontal text input
-  paddingVertical: 10,       // Padding for vertical text input
-  borderWidth: 1,            // Optional: Border width
-  borderColor: '#ccc',       // Optional: Border color (light gray)
+  height:40,               
+  fontSize: 16,             
+  backgroundColor: '#cccccc', 
+  borderRadius: 10,         
+  paddingHorizontal: 15,     
+  paddingVertical: 10,       
+  borderWidth: 1,            
+  borderColor: '#ccc',      
 }
 
 });

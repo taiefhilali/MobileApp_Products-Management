@@ -7,9 +7,8 @@ import {
   TextInput,
 } from "react-native";
 import React, { useEffect, useContext, useState, useCallback } from "react";
-import { Feather, AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Feather, AntDesign,MaterialIcons,Entypo } from "@expo/vector-icons";
+
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { UserType } from "../UserContext";
@@ -17,7 +16,7 @@ import { UserType } from "../UserContext";
 const AddAddressScreen = () => {
   const navigation = useNavigation();
   const [addresses, setAddresses] = useState([]);
-  const { userId, setUserId } = useContext(UserType);
+  const { userId } = useContext(UserType);
   console.log("userId", userId);
   useEffect(() => {
     fetchAddresses();

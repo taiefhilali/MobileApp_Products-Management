@@ -21,7 +21,6 @@ const ProductInfoScreen = () => {
       setAddedToCart(false);
     }, 60000);
   };
-  const cart = useSelector((state) => state.cart.cart);
 
   return (
     <ScrollView
@@ -46,10 +45,9 @@ const ProductInfoScreen = () => {
                 marginHorizontal: 7,
                 gap: 10,
                 backgroundColor: "white",
-                borderRadius: 3,
+                borderRadius: 30,
                 height: 38,
                 flex: 1,
-                borderRadius: 30
 
               }}
             >

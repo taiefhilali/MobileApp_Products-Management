@@ -7,9 +7,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
 import FamillesScreen from "../screens/DisplayFamillesScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Entypo } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign,Entypo,Ionicons } from "@expo/vector-icons";
 import ProductInfoScreen from "../screens/ProductInfoScreen";
 import AddAddressScreen from "../screens/AddAddressScreen";
 import AddressScreen from "../screens/AddressScreen";
@@ -22,7 +20,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StackNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [ setIsLoggedIn] = useState(false); // Track login state
   useEffect(() => {
     // Check if the user is logged in
     const checkLoginStatus = async () => {

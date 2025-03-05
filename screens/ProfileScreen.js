@@ -18,6 +18,7 @@ const ProfileScreen = () => {
   const { userId, setUserId } = useContext(UserType);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState();
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -45,7 +46,6 @@ const ProfileScreen = () => {
       ),
     });
   }, []);
-  const [user, setUser] = useState();
 
   useEffect(() => {
     const fetchUserData = async () => {
