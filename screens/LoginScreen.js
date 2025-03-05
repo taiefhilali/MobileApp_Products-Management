@@ -103,9 +103,9 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center", marginTop: 50 }}
-    >
+    <SafeAreaView style={styles.container}
+     >
+    
       <View>
         <Image style={styles.logo} source={require("../assets/images/sou9ek.png")} />
       </View>
@@ -114,6 +114,7 @@ const LoginScreen = () => {
         <View style={{ alignItems: "center" }}>
           {/* <Text style={styles.title}>Connectez-vous à votre compte</Text> */}
         </View>
+        <View style={styles.form}>
 
         <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
@@ -142,7 +143,7 @@ const LoginScreen = () => {
           </View>
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
         </View>
-
+</View>
         <Pressable onPress={handleLogin} style={styles.loginButton}>
           <Text style={styles.loginButtonText}>Login</Text>
         </Pressable>
@@ -169,9 +170,18 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+  },
   logo: {
-    width: 400,
+    width: 700,
     height: 200,
+    alignSelf: "center",
+    marginBottom: 10,
   },
   title: {
     fontSize: 17,
@@ -180,7 +190,16 @@ const styles = StyleSheet.create({
     color: "#041E42",
   },
   inputContainer: {
-    marginTop: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#D0D0D0",
+    paddingVertical: 8,
+    borderRadius: 10,
+    width: "70%",
+    paddingLeft: 15,
+    marginBottom: 10, 
+    borderWidth: 1,
+    borderColor: "#D0D0D0",
   },
   inputWrapper: {
     flexDirection: "row",
@@ -192,11 +211,30 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 8,
   },
+  form: {
+    marginTop: 30,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+    width: "90%",
+    maxWidth: 750, 
+    marginBottom: 40, 
+    alignSelf: "center",
+  },
   textInput: {
-    color: "gray",
-    marginVertical: 10,
-    width: 300,
-    fontSize: 16,
+    marginVertical: 8, 
+    width: "80%",
+    height: 40, 
+    fontSize: 14, 
+    borderRadius: 10, 
+    paddingHorizontal: 15,
+    paddingVertical: 8, 
+ 
   },
   errorText: {
     color: "red",
@@ -208,8 +246,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FEBE10",
     borderRadius: 6,
     padding: 15,
-    marginLeft:65,
     marginTop: 50,
+    marginBottom: 20,
+    alignSelf: "center",
   },
   loginButtonText: {
     textAlign: "center",

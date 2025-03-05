@@ -8,41 +8,29 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { UserType } from "../UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import sou9ekImage from '../assets/images/sou9ekbg.png'; // Adjust the path if necessary
 
 const ProfileScreen = () => {
-  const { userId, setUserId } = useContext(UserType);
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { userId } = useContext(UserType);
+  const [ setOrders] = useState([]);
+  const [ setLoading] = useState(true);
   const [user, setUser] = useState();
   const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
       headerStyle: {
-        backgroundColor: "#a1a09c",
+        backgroundColor: "#f3c94a",
       },
       headerLeft: () => (
         <Image
-        style={{ width: 230, height: 320, resizeMode: "contain" }}
-        source={sou9ekImage}
-      />
-      ),
-      headerRight: () => (
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 6,
-            marginRight: 12,
-          }}
-        >
-
-        </View>
+          style={{ width: 230, height: 320, resizeMode: "contain" }}
+          source={sou9ekImage}
+        />
       ),
     });
   }, []);
@@ -50,7 +38,6 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Retrieve user data from AsyncStorage (or localStorage for web)
         const userData = await AsyncStorage.getItem("userDetails"); // Adjust key name as needed
         if (userData) {
           setUser(JSON.parse(userData)); // Parse JSON if stored as a string
@@ -66,11 +53,13 @@ const ProfileScreen = () => {
   const logout = () => {
     clearAuthToken();
   };
+
   const clearAuthToken = async () => {
     await AsyncStorage.removeItem("authToken");
     console.log("auth token cleared");
     navigation.replace("Login");
   };
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -79,7 +68,6 @@ const ProfileScreen = () => {
         );
         const orders = response.data.orders;
         setOrders(orders);
-
         setLoading(false);
       } catch (error) {
         console.log("error", error);
@@ -87,96 +75,62 @@ const ProfileScreen = () => {
     };
 
     fetchOrders();
-  }, []);
-  console.log("orders", orders);
+  }, [userId]);
+
   return (
-    <ScrollView style={{ padding: 10, flex: 1, backgroundColor: "white" }}>
-      <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-        Welcome {user?.nom}
-      </Text>
+    <ScrollView style={styles.scrollContainer}>
+      {/* <Text style={styles.welcomeText}>Bienvenue Monsieur/Madame : {user?.nom}</Text> */}
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-          marginTop: 12,
-        }}
-      >
+      <View style={styles.profileContainer}>
+        {user ? (
+          <View style={styles.card}>
+            {/* Profile Image */}
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: user.profileImage }} style={styles.image} />
+            </View>
 
+            {/* User Name */}
+            <Text style={styles.name}>{user.nom} {user.prenom}</Text>
 
+            {/* User Details */}
+            <View style={styles.detailsContainer}>
+              <View style={styles.detailItem}>
+                <Text style={styles.label}>Email:</Text>
+                <Text style={styles.value}>{user.email}</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.label}>CIN:</Text>
+                <Text style={styles.value}>{user.cin}</Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <Text style={styles.loadingText}>Loading user data...</Text>
+        )}
       </View>
 
-  
-
-      <ScrollView style={styles.container}>
-      {user ? (
-        <View style={styles.card}>
-          {/* Profile Image */}
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: user.profileImage }}
-              style={styles.image}
-            />
-          </View>
-
-          {/* User Name */}
-          <Text style={styles.nom}>
-            {user.nom} {user.prenom}
-          </Text>
-
-          {/* User Details */}
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailItem}>
-              <Text style={styles.label}>Email:</Text>
-              <Text style={styles.value}>{user.email}</Text>
-              <View style={styles.detailItem}>
-              <Text style={styles.label}>CIN:</Text>
-              <Text style={styles.value}>{user.cin}</Text>
-            </View>
-            </View>
-          </View>
-        </View>
-      ) : (
-        <Text style={styles.loadingText}>Loading user data...</Text>
-      )}
-    </ScrollView>
-    <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-          marginTop: 12,
-        }}
-      >
-
-
-        <Pressable
-          onPress={logout}
-          style={{
-            padding: 10,
-            backgroundColor: "#E0E0E0",
-            borderRadius: 25,
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Logout</Text>
-        </Pressable>
-      </View> 
+      <Pressable onPress={logout} style={styles.logoutButton}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </Pressable>
     </ScrollView>
   );
 };
 
 export default ProfileScreen;
 
-
 const styles = StyleSheet.create({
-  container: {
+  scrollContainer: {
     flex: 1,
     backgroundColor: "#f5f5f5",
     padding: 16,
   },
-  card: {
+  welcomeText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+  },
+  profileContainer: {
     backgroundColor: "#fff",
     borderRadius: 12,
     shadowColor: "#000",
@@ -185,8 +139,11 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
     padding: 20,
+    marginBottom: 30,
+  },
+  card: {
     alignItems: "center",
-    marginVertical: 20,
+    marginBottom: 20,
   },
   imageContainer: {
     width: 120,
@@ -194,6 +151,8 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     overflow: "hidden",
     marginBottom: 16,
+    borderWidth: 2,
+    borderColor: "#ddd",
   },
   image: {
     width: "100%",
@@ -201,21 +160,20 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   name: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 16,
+    marginBottom: 8,
     textAlign: "center",
+    color: "#333",
   },
   detailsContainer: {
     width: "100%",
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
     paddingTop: 16,
   },
   detailItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   label: {
     fontSize: 14,
@@ -230,5 +188,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     marginTop: 20,
+  },
+  logoutButton: {
+    backgroundColor: "#E0E0E0",
+    paddingVertical: 12,
+    borderRadius: 25,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
   },
 });

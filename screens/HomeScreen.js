@@ -126,6 +126,7 @@ const HomeScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+    
       {/* Header Section */}
       <View style={styles.header}>
       {/* Time */}
@@ -159,7 +160,7 @@ const HomeScreen = () => {
       />
 
       {/* Categories Section */}
-      <Text style={styles.dealscontainer}>Familles</Text>
+      <Text style={[styles.sectionTitle, { marginLeft: 20.385 }]}>Familles</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryCarousel}>
         <FlatList
           data={familles}
@@ -187,12 +188,12 @@ const HomeScreen = () => {
 
       {/* Promotion Banner */}
       <View style={styles.promoBanner}>
-        <Text style={styles.promoText}>Articles on promotion</Text>
-        <TouchableOpacity style={styles.shopNow}><Text style={styles.shopNowText}>Swipe Now</Text></TouchableOpacity>
+        <Text style={styles.promoText}>Articles en promotion</Text>
+        <TouchableOpacity style={styles.shopNow}><Text style={styles.shopNowText}>Voir ci-dessous </Text></TouchableOpacity>
       </View>
 
       <View style={styles.dealscontainer}>
-        <Text style={styles.dealssectionTitle}>Deals of Today</Text>
+        <Text style={styles.dealssectionTitle}>Offres du jour</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <FlatList
             data={deals}
@@ -207,7 +208,7 @@ const HomeScreen = () => {
                 <View>
                   <Text style={styles.dealTitle}>{item.designation}</Text>
                   <Text style={styles.price}>{item.prixDeVenteTTC}DT</Text>
-                  <Text style={styles.promo}>Ends Today at {new Date(item.finDate).toLocaleTimeString()}</Text>
+                  <Text style={styles.promo}>Se termine aujourd'hui à {new Date(item.finDate).toLocaleTimeString()}</Text>
                 </View>
               </View>
             )}
@@ -218,7 +219,7 @@ const HomeScreen = () => {
 
       </View>
       <View style={styles.articlesSection}>
-      <Text style={styles.sectionTitle}>Featured Articles</Text>
+      <Text style={styles.sectionTitle}>Articles en vedette</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <FlatList
           data={products}
@@ -249,14 +250,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#3b3b3b', // Dark background for contrast
+    backgroundColor: '#f3c94a', // Dark background for contrast
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
-    elevation: 5, // Add shadow for depth
+    elevation: 5,
+    marginTop:20
   },
   time: {
     color: 'white',

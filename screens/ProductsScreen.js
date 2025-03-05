@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for the arrow 
 const { width, height } = Dimensions.get('window'); // Get screen width and height
 
 const ProductsScreen = ({ route }) => {
-  const { familleId, familleName } = route.params;
+  const { familleId } = route.params;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();

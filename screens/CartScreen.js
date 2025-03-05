@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 30,
     marginHorizontal: 10,
-    marginTop: 10,
+    marginTop: 5,
   },
   searchInput: {
     flexDirection: "row",

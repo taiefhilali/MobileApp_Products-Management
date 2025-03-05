@@ -95,12 +95,12 @@ const ProductItem = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "44%", // Width adjusted to display 2 items per row
+    width: "20%", // Width adjusted to display 2 items per row
     borderRadius: 15,
     borderWidth: 1,
     borderColor: "#ddd",
     overflow: "hidden",
-    margin: 10, // Adds space around the item
+    margin: 18, // Adds space around the item
     backgroundColor: "#fff",
     elevation: 5, // Adds shadow for better card visibility
   },

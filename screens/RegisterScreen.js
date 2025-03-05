@@ -195,7 +195,7 @@ const RegisterScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Image style={styles.logo} source={require("../assets/images/sou9ek.png")} />
+        <Image style={styles.logo} source={require("../assets/images/sou9ekbg.png")} />
       </View>
 
       <KeyboardAvoidingView>
@@ -210,24 +210,27 @@ const RegisterScreen = () => {
 
             />
             {nomError ? <Text style={styles.errorText}>{nomError}</Text> : null}
+            </View>
+
+          <View style={styles.row}>
 
             <TextInputField icon="ios-person" value={prenom} onChangeText={setPrenom} placeholder="Prenom" />
+           
             {prenomError ? <Text style={styles.errorText}>{prenomError}</Text> : null}
 
           </View>
           <View style={styles.row}>
          
-                     <TextInput
-              
-              style={styles.textInput}
-              placeholder=" Email"
-              keyboardType="email-address"
-              icon="email"
-              iconLib={MaterialIcons}
-              value={email}
-              onChangeText={setEmail}
-            />
-
+          <View style={styles.inputContainer}>
+        <MaterialIcons name="email" size={20} color="gray" style={styles.icon} />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
             {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
 
@@ -238,6 +241,8 @@ const RegisterScreen = () => {
           <View style={styles.row}>
             <TextInputField icon="location-sharp" value={adresse} onChangeText={setAdresse} placeholder="Addresse" />
             {adresseError ? <Text style={styles.errorText}>{adresseError}</Text> : null}
+            </View>
+            <View style={styles.row}>
 
             <TextInputField icon="location" value={ville} onChangeText={setVille} placeholder="ville" />
             {villeError ? <Text style={styles.errorText}>{villeError}</Text> : null}
@@ -247,6 +252,8 @@ const RegisterScreen = () => {
           <View style={styles.row}>
             <TextInputField icon="call" value={tel1} onChangeText={setTel1} placeholder="tel 1" keyboardType="phone-pad" />
             {tel1Error ? <Text style={styles.errorText}>{tel1Error}</Text> : null}
+            </View>
+            <View style={styles.row}>
 
             <TextInputField icon="call" value={tel2} onChangeText={setTel2} placeholder="tel 2 " keyboardType="phone-pad" />
 
@@ -254,6 +261,9 @@ const RegisterScreen = () => {
           <View style={styles.row}>
             <TextInputField icon="id-card" iconLib={FontAwesome5} value={cin} onChangeText={setCin} placeholder="CIN" keyboardType="numeric" />
             {cinError ? <Text style={styles.errorText}>{cinError}</Text> : null}
+            </View>
+            <View style={styles.row}>
+
             <TextInputField icon="lock1" iconLib={AntDesign} value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} />
 
             {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
@@ -305,18 +315,16 @@ const TextInputField = ({
   </View>
 );
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    marginTop: 50,
-  },
+
   logo: {
-    width: 400,
+    width: 500,
     height: 200,
+    alignSelf: "center",
+    marginBottom: 10,
   },
   header: {
     alignItems: "center",
+    marginBottom: 20, 
   },
   headerText: {
     fontSize: 17,
@@ -326,40 +334,53 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 30,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+    width: "90%",
+    maxWidth: 750, 
+    marginBottom: 40, 
+    alignSelf: "center",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#D0D0D0",
-    paddingVertical: 5,
-    borderRadius: 5,
-    width: 150, 
-    paddingLeft: 8,
-    marginRight: 10, 
+    paddingVertical: 8,
+    borderRadius: 10,
+    width: "100%",
+    paddingLeft: 15,
+    marginBottom: 10, 
+    borderWidth: 1,
+    borderColor: "#D0D0D0",
   },
   errorText: {
     color: "red",
     fontSize: 12,
     marginTop: 5,
   },
-
   icon: { marginRight: 8 },
   input: {
-    color: "gray",
-    width: "100%", 
-    fontSize: 14, 
+    width: "100%",
+    fontSize: 14,
+    height: 35, 
   },
   registerButton: {
     width: 200,
     backgroundColor: "#FEBE10",
     borderRadius: 6,
-    padding: 15,
-    marginTop: 40,
+    padding: 12,
+    marginTop: 30, 
     alignSelf: "center",
   },
   registerButtonText: {
@@ -376,7 +397,6 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 16,
   },
-  // Add other styles here
   imagePickerButton: {
     backgroundColor: "#FEBE10",
     padding: 10,
@@ -393,20 +413,16 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginTop: 10,
   },
-textInput: {
-  color: 'gray',           
-  marginVertical: 10,        
-  width: 310,
-  height:40,               
-  fontSize: 16,             
-  backgroundColor: '#cccccc', 
-  borderRadius: 10,         
-  paddingHorizontal: 15,     
-  paddingVertical: 10,       
-  borderWidth: 1,            
-  borderColor: '#ccc',      
-}
-
+  textInput: {
+    marginVertical: 8, 
+    width: "100%",
+    height: 40, 
+    fontSize: 14, 
+    borderRadius: 10, 
+    paddingHorizontal: 15,
+    paddingVertical: 8, 
+ 
+  },
 });
 
 export default RegisterScreen;
